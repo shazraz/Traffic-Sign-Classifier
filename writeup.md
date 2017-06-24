@@ -18,7 +18,7 @@ The goals / steps of this project are the following:
 [image4]: ./Write-up%20Images/AugDataHistogram.png "Data Distribution after Basic Augmentation"
 [image5]: ./Write-up%20Images/augmentation.png "Augmentation via Translation/Rotation"
 [image6]: ./Write-up%20Images/FinalDataHistogram.png "Data Distribution after Final Augmentation"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
+[image7]: ./Write-up%20Images/image-processing.png "Image Processing Results"
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
 ## Rubric Points
@@ -116,7 +116,7 @@ The following table provides an analysis of the labels that can be augmented in 
 | 41      | End of no passing                                  | Y                  |        |        |         |         |           |
 | 42      | End of no passing by vehicles over 3.5 metric tons | Y                  |        |        |         |         |           |
 
-The following histogram shows a result of basic augmentation with a number of under-represented labels being passed in for augmentation. It is seen that while some labels (i.e. 17, 26, 33, 34, 39) are somewhat more represented, additional augmentation is required. 
+The following histogram shows a result of basic augmentation with a number of under-represented labels being passed in for augmentation. The size of the new training set is now 41458 images compared to the earlier 34799 images. It is seen that while some labels (i.e. 17, 26, 33, 34, 39) are somewhat more represented, additional augmentation is required.
 
 ![alt text][image4]
 
@@ -126,7 +126,7 @@ Consequently, minor random pertubations were applied to the training set images 
 * rt_range: 15, range of rotation for each image
 * xlate_range: 5, range of (x,y) translation for each image
 
-The figure below shows a series of augmented images created from a single original image
+The figure below shows a series of augmented images created from a single original image. Each image is a minor perturbation of the original image.
 
 ![alt text][image5]
 
@@ -134,36 +134,53 @@ Once the augmentation was complete, the dataset was much more balanced and ready
 
 ![alt text][image6]
 
+This augmentation allows us to extend the training set from an original size of 34799 images to 68490 images which is approximately a two-fold increase.
+
 3.1.2 Image Processing
 
-I decided to generate additional data because ... 
+One the dataset is balanced, the images now need to be further processed before used for training. This image processing consists of a number of steps:
 
-To add more data to the the data set, I used the following techniques because ... 
+1. Conversion of images to grayscale using OpenCV to allow the model to train on traffic sign features
+1. Image histogram equalization using the OpenCV CLAHE (Constrast-Limited Adaptive Histogram Equalization) to improve the illumination in the images. The poor brightness across some images can be seen in the data set visualization presented earlier in Section 2.2 Conversely, there are images included in the dataset that are over-exposed and also need to be normalized. This equalization is carried out on both the RGB images and grayscale images independently. The use of the CLAHE algorithm was based on the OpenCV [documentation](http://docs.opencv.org/3.1.0/d5/daf/tutorial_py_histogram_equalization.html) and introduces two additional hyper-parameters:
+     * Tile Grid Size: 4x4, defines the # of tiles the image is divided into prior to equalization
+     * Clip Limit: 2.0, defines the upper contrast limit of tiles to prevent noise amplification 
+1. The (32,32,1) equalized grayscale images and (32,32,3) equalized RGB images are then merged to create a combined image of dimensions (32,32,4). This is done to provide the model with both the grayscale features as well as the color information embedded within the image which provides additional information for the classifier to train on.
+1. Finally, the 4-channel images are normalized by subtracting the mean and  dividing by the standard deviation of the entire training data split. It is important to note that the validation and test data splits are also normalized using the mean and std dev of the training data split to maintain consistency in pre-processing.
 
-Here is an example of an original image and an augmented image:
+The following image shows a 17 - No Entry sign at index 35242 of the final augmented training set that has been grayscaled and equalized.
 
-![alt text][image3]
+![alt text][image7]
 
-The difference between the original data set and the augmented data set is the following ... 
+This final augmented & processed training data set is now ready to be fed into the model for training.
 
+*3.2 Model Architecture*
 
 ####2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-My final model consisted of the following layers:
+During the course of investigating alternative models for the potential architecture, a number of additional well-reknowned architectures were examined from the list of ILSVRC winners over the past years (e.g. AlexNet, VGG, GoogLeNet, ResNet, etc.). However, this traffic sign classifier model was based on the LeNet-5 architecture examined in the Udacity course lectures. The decision was based on implementing a known, simple architecture that could be trained easily on limited computing resources to see it's effectiveness.
+
+The final model consisted of the following layers:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
-| RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
-|						|												|
- 
+| Input         		| 32x32x4 gray-RGB image   							| 
+| Convolution L1 5x5     	| 1x1 stride, valid padding, outputs 28x28x10 	|
+| RELU	Activation				|												|
+| Max pooling	      	| 2x2 stride,  outputs 14x14x10 				|
+| Convolution L2 5x5	    | 1x1 stride, valid padding, outputs 10x10x20      									|
+| RELU Activation		|         									|
+| Max pooling				| 2x2 stride, valid padding, outputs 5x5x20        									|
+|	Fully Connected Layer L3					| Input flattened 500 dims from previous max pooling layer, outputs 120												|
+| RELU Activation						|												|
+| Dropout						|	Keep_prob:0.5											|
+| Fully Connected Layer L4						|	outputs 84											|
+| RELU Activation						|												|
+| Dropout						|	Keep_prob:0.5											|
+| Fully Connected Layer L5						|	outputs 43											|
 
+The layers are based on the LeNet lab exercise from the Udacity course material with the input and output dimensions adjusted for the merged gray-RGB images being passed into the model. The model also includes two dropout layers after the first two fully connected layers to improve the generalization performance.
+
+*3.3 Model Training*
 
 ####3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
