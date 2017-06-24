@@ -12,13 +12,12 @@ The goals / steps of this project are the following:
 
 
 [//]: # (Image References)
-
-[image1]: ./Write-up Images/DataHistogram.png "Visualization"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
+[image1]: ./Write-up%20Images/DataHistogram.png "Visualization"
+[image2]: ./Write-up%20Images/10-image-set.png "31 - Wild Animals Crossing"
+[image3]: ./Write-up%20Images/y-flipped-image.png "Image Mirrored along Y-axis"
+[image4]: ./Write-up%20Images/AugDataHistogram.png "Data Distribution after Basic Augmentation"
+[image5]: ./Write-up%20Images/augmentation.png "Augmentation via Translation/Rotation"
+[image6]: ./Write-up%20Images/FinalDataHistogram.png "Data Distribution after Final Augmentation"
 [image7]: ./examples/placeholder.png "Traffic Sign 4"
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
@@ -38,7 +37,7 @@ This submission consists of:
 
 **2. Data Set Summary & Exploration**
 
-2.1 Data Set Summary
+*2.1 Data Set Summary*
 
 I used the numpy library to calculate summary statistics of the traffic signs data set:
 
@@ -48,23 +47,82 @@ I used the numpy library to calculate summary statistics of the traffic signs da
 * The shape of a traffic sign image is (32,32,3)
 * The number of unique classes/labels in the data set is 43
 
-2.2 Exploratory Visualization of the dataset.
+*2.2 Exploratory Visualization of the dataset*
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+Here is an exploratory visualization of the data set. The histogram below shows the relative distribution of each of the three data splits (training, validation & test) for each of the 43 labels in the data. A number of the labels aren't adequately represented and training a model on this dataset without any augmentation will result in a model biased towards the over-represented labels. 
 
 ![alt text][image1]
 
-###Design and Test a Model Architecture
-
-####1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
-
-As a first step, I decided to convert the images to grayscale because ...
-
-Here is an example of a traffic sign image before and after grayscaling.
+In addtion, let's take a look at some of the images in the dataset. The following image shows a plot of 10 sequential images starting randomly somewhere in the training data set. The images are from Label 31 - Wild Animals Crossing and appear to be poorly illuminated in some instances and some pre-processing will be required to produce better results when training the model.
 
 ![alt text][image2]
 
-As a last step, I normalized the image data because ...
+**3. Design and Test a Model Architecture**
+
+####1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
+
+*3.1 Preprocessing*
+
+3.1.1 Data Augmentation
+The first step was to experiment with simple data augmentation using the basic_augment() function. This function is fed with the training data set (X_train, y_train) along with a list of labels that can be mirrored in the x-axis and/or y-axis as well as rotated. By limiting the labels augmented to those that are under-represented in the data set, we can quickly obtain additional images from the existing data set. The image below shows an example of a 38 - Keep Right image that can be mirrored along the Y-axis to create an image with label 39 - Keep left which is an under-represented label.
+
+![alt text][image3]
+
+The following table provides an analysis of the labels that can be augmented in this method to create additional images in either the same class or other classes.
+
+| ClassId | SignName                                           | Under-Represented? | Flip-Y | Flip-X | Rot 180 | Rot 120 | New Class |
+|---------|----------------------------------------------------|--------------------|--------|--------|---------|---------|-----------|
+| 0       | Speed limit (20km/h)                               | Y                  |        |        |         |         |           |
+| 1       | Speed limit (30km/h)                               |                    |        | X      |         |         | 1         |
+| 2       | Speed limit (50km/h)                               |                    |        |        |         |         |           |
+| 3       | Speed limit (60km/h)                               |                    |        |        |         |         |           |
+| 4       | Speed limit (70km/h)                               |                    |        |        |         |         |           |
+| 5       | Speed limit (80km/h)                               |                    |        | X      |         |         | 5         |
+| 6       | End of speed limit (80km/h)                        | Y                  |        |        |         |         |           |
+| 7       | Speed limit (100km/h)                              |                    |        |        |         |         |           |
+| 8       | Speed limit (120km/h)                              |                    |        |        |         |         |           |
+| 9       | No passing                                         |                    |        |        |         |         |           |
+| 10      | No passing for vehicles over 3.5 metric tons       |                    |        |        |         |         |           |
+| 11      | Right-of-way at the next intersection              |                    |        |        |         |         |           |
+| 12      | Priority road                                      |                    |        |        |         |         |           |
+| 13      | Yield                                              |                    |        |        |         |         |           |
+| 14      | Stop                                               |                    |        |        |         |         |           |
+| 15      | No vehicles                                        |                    |        |        |         |         |           |
+| 16      | Vehicles over 3.5 metric tons prohibited           | Y                  |        |        |         |         |           |
+| 17      | No entry                                           |                    | X      | X      | X       |         | 17        |
+| 18      | General caution                                    |                    | X      |        |         |         | 18        |
+| 19      | Dangerous curve to the left                        | Y                  | X      |        |         |         | 20        |
+| 20      | Dangerous curve to the right                       | Y                  | X      |        |         |         | 19        |
+| 21      | Double curve                                       | Y                  |        |        |         |         |           |
+| 22      | Bumpy road                                         | Y                  | X      |        |         |         | 22        |
+| 23      | Slippery road                                      | Y                  |        |        |         |         |           |
+| 24      | Road narrows on the right                          | Y                  |        |        |         |         |           |
+| 25      | Road work                                          |                    |        |        |         |         |           |
+| 26      | Traffic signals                                    | Y                  | X      |        |         |         | 26        |
+| 27      | Pedestrians                                        | Y                  |        |        |         |         |           |
+| 28      | Children crossing                                  | Y                  |        |        |         |         |           |
+| 29      | Bicycles crossing                                  | Y                  |        |        |         |         |           |
+| 30      | Beware of ice/snow                                 | Y                  | X      |        |         |         | 30        |
+| 31      | Wild animals crossing                              |                    |        |        |         |         |           |
+| 32      | End of all speed and passing limits                | Y                  |        |        | X       |         |           |
+| 33      | Turn right ahead                                   |                    | X      |        |         |         | 34        |
+| 34      | Turn left ahead                                    | Y                  | X      |        |         |         | 33        |
+| 35      | Ahead only                                         |                    | X      |        |         |         | 35        |
+| 36      | Go straight or right                               | Y                  | X      |        |         |         | 37        |
+| 37      | Go straight or left                                | Y                  | X      |        |         |         | 36        |
+| 38      | Keep right                                         |                    | X      |        |         |         | 39        |
+| 39      | Keep left                                          | Y                  | X      |        |         |         | 38        |
+| 40      | Roundabout mandatory                               | Y                  |        |        |         | X       | 40        |
+| 41      | End of no passing                                  | Y                  |        |        |         |         |           |
+| 42      | End of no passing by vehicles over 3.5 metric tons | Y                  |        |        |         |         |           |
+
+The following histogram shows a result of basic augmentation with a number of under-represented labels being passed in for augmentation. It is seen that while some labels (i.e. 17, 26, 33, 34, 39) are somewhat more represented, additional augmentation is required. 
+
+![alt text][image4]
+
+Consequently, minor random pertubations were applied to the training set images to further balance the dataset. This consisted of translating the images along the both the x and y axes by a random amount within a fixed range or rotating the images about their center by a random amount within a fixed range. This was accomplished by the use of the augment_set() function which was passed a number of parameters.
+
+3.1.2 Image Processing
 
 I decided to generate additional data because ... 
 
