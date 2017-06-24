@@ -14,7 +14,7 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 [image1]: ./Write-up%20Images/DataHistogram.png "Visualization"
 [image2]: ./Write-up%20Images/10-image-set.png "31 - Wild Animals Crossing"
-[image3]: ./Write-up%20Images/y-flipped-image.png "Image Mirrored along Y-axis"
+[image3]: ./Write-up%20Images/y-flipped_image.png "Image Mirrored along Y-axis"
 [image4]: ./Write-up%20Images/AugDataHistogram.png "Data Distribution after Basic Augmentation"
 [image5]: ./Write-up%20Images/augmentation.png "Augmentation via Translation/Rotation"
 [image6]: ./Write-up%20Images/FinalDataHistogram.png "Data Distribution after Final Augmentation"
