@@ -1,11 +1,5 @@
 #**Traffic Sign Recognition** 
-
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
 ---
-
 **Build a Traffic Sign Recognition Project**
 
 The goals / steps of this project are the following:
@@ -19,7 +13,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
+[image1]: ./"Write-up Images"/DataHistogram.png "Visualization"
 [image2]: ./examples/grayscale.jpg "Grayscaling"
 [image3]: ./examples/random_noise.jpg "Random Noise"
 [image4]: ./examples/placeholder.png "Traffic Sign 1"
@@ -29,29 +23,32 @@ The goals / steps of this project are the following:
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
+The following sections address the individual [Rubric points](https://review.udacity.com/#!/rubrics/481/view) for this submission. 
 
 ---
-###Writeup / README
+**1. Submission Files**
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
+This submission consists of:
 
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+1. The IPython notebook containing the project code: [Traffic_Sign_Classifier.ipynb](https://github.com/shazraz/P2-TrafficSignClassifier/blob/master/Traffic_Sign_Classifier.ipynb)
+1. An HTML version of the IPython notebook: [Traffic_Sign_Classifier.html](https://github.com/shazraz/P2-TrafficSignClassifier/blob/master/Traffic_Sign_Classifier.html)
+1. The trained and saved model: LeNet5_Run3
+1. A set of images downloaded from the internet used to test the model: [Images](https://github.com/shazraz/P2-TrafficSignClassifier/tree/master/Images)
+ {source: Sonja Krause-Harder for some of these images on the p-traffic-signs Slack channel}
 
-###Data Set Summary & Exploration
+**2. Data Set Summary & Exploration**
 
-####1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
+2.1 Data Set Summary
 
-I used the pandas library to calculate summary statistics of the traffic
-signs data set:
+I used the numpy library to calculate summary statistics of the traffic signs data set:
 
-* The size of training set is ?
-* The size of the validation set is ?
-* The size of test set is ?
-* The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
+* The size of training set is 34799 images
+* The size of the validation set is 4410
+* The size of test set is 12630
+* The shape of a traffic sign image is (32,32,3)
+* The number of unique classes/labels in the data set is 43
 
-####2. Include an exploratory visualization of the dataset.
+2.2 Exploratory Visualization of the dataset.
 
 Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
 
