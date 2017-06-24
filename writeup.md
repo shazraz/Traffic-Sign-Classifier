@@ -120,7 +120,19 @@ The following histogram shows a result of basic augmentation with a number of un
 
 ![alt text][image4]
 
-Consequently, minor random pertubations were applied to the training set images to further balance the dataset. This consisted of translating the images along the both the x and y axes by a random amount within a fixed range or rotating the images about their center by a random amount within a fixed range. This was accomplished by the use of the augment_set() function which was passed a number of parameters.
+Consequently, minor random pertubations were applied to the training set images to further balance the dataset. This consisted of translating the images along the both the x and y axes by a random amount within a fixed range or rotating the images about their center by a random amount within a fixed range. This was accomplished by the use of the augment_set() function which was passed a number of parameters including the dataset of images and labels, the labels within the dataset to augment, the minimum threshold quantity of each label and the ranges for the translation and rotation when augmenting the dataset. This led to the introduction of the following hyper-parameters within the model and their corresponding values used for augmentation:
+
+* n_threshold: 1500,  threshold quantity of images within each label
+* rt_range: 15, range of rotation for each image
+* xlate_range: 5, range of (x,y) translation for each image
+
+The figure below shows a series of augmented images created from a single original image
+
+![alt text][image5]
+
+Once the augmentation was complete, the dataset was much more balanced and ready for further processing prior to use in training. This is shown in the histogram below:
+
+![alt text][image6]
 
 3.1.2 Image Processing
 
