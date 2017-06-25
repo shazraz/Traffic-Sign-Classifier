@@ -19,7 +19,22 @@ The goals / steps of this project are the following:
 [image5]: ./Write-up%20Images/augmentation.png "Augmentation via Translation/Rotation"
 [image6]: ./Write-up%20Images/FinalDataHistogram.png "Data Distribution after Final Augmentation"
 [image7]: ./Write-up%20Images/image-processing.png "Image Processing Results"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[image8]: ./Write-up%20Images/accuracy-loss-final.png "Accuracy, Loss Trends"
+[image9]: ./Images/1-13.jpg "Test Images"
+[image10]: ./Images/2-12.jpg "Test Images"
+[image11]: ./Images/3-28.jpg "Test Images"
+[image12]: ./Images/4-36.jpg "Test Images"
+[image13]: ./Images/5-17.jpg "Test Images"
+[image14]: ./Images/accuracy-loss-final.png "Test Images"
+[image15]: ./Images/accuracy-loss-final.png "Test Images"
+[image16]: ./Images/accuracy-loss-final.png "Test Images"
+[image17]: ./Images/accuracy-loss-final.png "Test Images"
+[image18]: ./Images/accuracy-loss-final.png "Test Images"
+[image19]: ./Images/accuracy-loss-final.png "Test Images"
+[image20]: ./Images/accuracy-loss-final.png "Test Images"
+[image21]: ./Images/accuracy-loss-final.png "Test Images"
+
+
 
 ## Rubric Points
 The following sections address the individual [Rubric points](https://review.udacity.com/#!/rubrics/481/view) for this submission. 
@@ -33,7 +48,7 @@ This submission consists of:
 1. An HTML version of the IPython notebook: [Traffic_Sign_Classifier.html](https://github.com/shazraz/P2-TrafficSignClassifier/blob/master/Traffic_Sign_Classifier.html)
 1. The trained and saved model: LeNet5_Run3
 1. A set of images downloaded from the internet used to test the model: [Images](https://github.com/shazraz/P2-TrafficSignClassifier/tree/master/Images)
- {source: Sonja Krause-Harder for some of these images on the p-traffic-signs Slack channel}
+ {credit: Sonja Krause-Harder for psoting some of these images on the p-traffic-signs Slack channel}
 
 **2. Data Set Summary & Exploration**
 
@@ -136,6 +151,8 @@ Once the augmentation was complete, the dataset was much more balanced and ready
 
 This augmentation allows us to extend the training set from an original size of 34799 images to 68490 images which is approximately a two-fold increase.
 
+It is worth mentioning that randomly augmenting the brightness of the image was also experimented with but this seemed to have a detrimental effect on the observed image quality. In particular, artifacts were observed in the image, therefore brightness augmentation was not done.
+
 3.1.2 Image Processing
 
 One the dataset is balanced, the images now need to be further processed before used for training. This image processing consists of a number of steps:
@@ -154,8 +171,6 @@ The following image shows a 17 - No Entry sign at index 35242 of the final augme
 This final augmented & processed training data set is now ready to be fed into the model for training.
 
 *3.2 Model Architecture*
-
-####2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
 During the course of investigating alternative models for the potential architecture, a number of additional well-reknowned architectures were examined from the list of ILSVRC winners over the past years (e.g. AlexNet, VGG, GoogLeNet, ResNet, etc.). However, this traffic sign classifier model was based on the LeNet-5 architecture examined in the Udacity course lectures. The decision was based on implementing a known, simple architecture that could be trained easily on limited computing resources to see it's effectiveness.
 
@@ -182,35 +197,109 @@ The layers are based on the LeNet lab exercise from the Udacity course material 
 
 *3.3 Model Training*
 
-####3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
+The LeNet-5 architecture was initially trained using an Adam optimizer with the following hyper-parameters on a dataset with basic augmentation and only grayscale images. The starting weights and biases were initialized using the tensorflow truncated normal function with an average of 0 and a std dev of 0.1.
 
-To train the model, I used an ....
+   * Batch Size: 128
+   * Learning Rate: 0.001
+   * Epochs: 10
+   * Keep Probability (for Dropout): 0.7
 
-####4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
+The training was conducted on an Intel i7-5600 series CPU which took approximately 10-20 minutes depending on the size of the dataset (augmented vs un-augmented) and number of epochs. A discussion of training approach is provided below.
 
-My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+*3.4 Solution Approach*
 
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
+The initial training run already revealed a validation accuracy just north of the required 93%. However, it was felt that this could be significantly improved since many of the methodologies recommended in the lectures had not been implemented. As a result, several concepts were introduced into the training model one at a time to observe their effect on the overall validation accuracy. The steps roughly followed the proceeding order:
 
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
+   * Increase # of epochs
+   * Decrease learning rate
+   * Adjust image equalization hyper-parameters
+   * Convert dataset from grayscale images to 4-channel grayscale/RGB images (i.e. increasing # of model parameters)
+   * Apply augmentation using pertubations of original images
+   * Adjust Keep Probability used in Dropout layers
+   * Introduce L2 norm regularization and experiment with values of beta
  
+At each step, a single hyper-parameter was adjusted to determine a general trend in the performance of the model. The accuracy and loss trends were observed to make a decision on which parameter to adjust next. e.g. once overfitting was observed, the generalization performance of the model was improved by augmenting the data by different amounts by adjusting n_threshold, adjusting the dropout probability and varying the severity of the pertubations with rt_range and xlate_range one at a time and observing the effects on the accuracy/loss plots. 
 
-###Test a Model on New Images
+The accuracy/loss plots were generated by modifying the evaluate() function to return both accuracy and loss and saving them an in array during training for both the training and validation datasets.
 
-####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+In total, each of the hyper-parameters below were adjusted until the provided listed final values were obtained:
 
-Here are five German traffic signs that I found on the web:
+   * Batch Size: 128
+   * Epochs: 15
+   * Learning Rate: 0.0005
+   * Keep Probability: 0.5
+   * Beta: 0.001
+   * n_threshold: 1500
+   * rt_range: 15
+   * xlate_range: 5
+
+The figure below shows the accuracy loss trends for this run:
+
+![alt text][image8]
+
+These resulted in the following final values in the last epoch:
+
+   * training set accuracy of 99.6%
+   * validation set accuracy of 97.3% 
+   * test set accuracy of 96.4%
+   
+The following table provides the precision and recall over the test data for each label in this model:
+
+| Label | Label name                                         | # of samples | Precision | Recall  |
+|-------|----------------------------------------------------|--------------|-----------|---------|
+| 1     | Speed limit (20km/h)                               | 60           | 95.08%    | 96.67%  |
+| 2     | Speed limit (30km/h)                               | 720          | 92.76%    | 97.92%  |
+| 3     | Speed limit (50km/h)                               | 750          | 95.24%    | 98.67%  |
+| 4     | Speed limit (60km/h)                               | 450          | 95.70%    | 94.00%  |
+| 5     | Speed limit (70km/h)                               | 660          | 98.46%    | 96.67%  |
+| 6     | Speed limit (80km/h)                               | 630          | 94.92%    | 89.05%  |
+| 7     | End of speed limit (80km/h)                        | 150          | 98.63%    | 96.00%  |
+| 8     | Speed limit (100km/h)                              | 450          | 95.46%    | 98.22%  |
+| 9     | Speed limit (120km/h)                              | 450          | 97.70%    | 94.22%  |
+| 10    | No passing                                         | 480          | 99.38%    | 100.00% |
+| 11    | No passing for vehicles over 3.5 metric tons       | 660          | 100.00%   | 97.58%  |
+| 12    | Right-of-way at the next intersection              | 420          | 98.55%    | 97.14%  |
+| 13    | Priority road                                      | 690          | 99.70%    | 96.96%  |
+| 14    | Yield                                              | 720          | 98.76%    | 99.17%  |
+| 15    | Stop                                               | 270          | 99.26%    | 100.00% |
+| 16    | No vehicles                                        | 210          | 88.09%    | 98.57%  |
+| 17    | Vehicles over 3.5 metric tons prohibited           | 150          | 100.00%   | 100.00% |
+| 18    | No entry                                           | 360          | 100.00%   | 99.72%  |
+| 19    | General caution                                    | 390          | 96.86%    | 86.92%  |
+| 20    | Dangerous curve to the left                        | 60           | 73.17%    | 100.00% |
+| 21    | Dangerous curve to the right                       | 90           | 91.67%    | 97.78%  |
+| 22    | Double curve                                       | 90           | 80.25%    | 72.22%  |
+| 23    | Bumpy road                                         | 120          | 91.67%    | 91.67%  |
+| 24    | Slippery road                                      | 150          | 90.07%    | 90.67%  |
+| 25    | Road narrows on the right                          | 90           | 96.39%    | 88.89%  |
+| 26    | Road work                                          | 480          | 96.32%    | 98.12%  |
+| 27    | Traffic signals                                    | 180          | 86.67%    | 86.67%  |
+| 28    | Pedestrians                                        | 60           | 76.39%    | 91.67%  |
+| 29    | Children crossing                                  | 150          | 94.23%    | 98.00%  |
+| 30    | Bicycles crossing                                  | 90           | 93.75%    | 100.00% |
+| 31    | Beware of ice/snow                                 | 150          | 89.13%    | 82.00%  |
+| 32    | Wild animals crossing                              | 270          | 97.41%    | 97.41%  |
+| 33    | End of all speed and passing limits                | 60           | 100.00%   | 98.33%  |
+| 34    | Turn right ahead                                   | 210          | 98.58%    | 99.52%  |
+| 35    | Turn left ahead                                    | 120          | 97.54%    | 99.17%  |
+| 36    | Ahead only                                         | 390          | 98.97%    | 98.97%  |
+| 37    | Go straight or right                               | 120          | 96.77%    | 100.00% |
+| 38    | Go straight or left                                | 60           | 92.19%    | 98.33%  |
+| 39    | Keep right                                         | 690          | 99.71%    | 99.13%  |
+| 40    | Keep left                                          | 90           | 94.68%    | 98.89%  |
+| 41    | Roundabout mandatory                               | 90           | 95.60%    | 96.67%  |
+| 42    | End of no passing                                  | 60           | 100.00%   | 100.00% |
+| 43    | End of no passing by vehicles over 3.5 metric tons | 90           | 98.90%    | 100.00% |
+
+It is worth mentioning, almost confessing, at this point that this model is not extensively tweaked. There is likely a better solution for this existing architecture if further iterations of the aforementioned hyper-parameters are conducted. However, the iterative process was abandoned at this stage since the proposed model significantly exceeded the requirements of the project and due to the limitation in available computational resources. Regardless, it was interesting to note that a simple 5 layer architecture was able to provide reasonable performance on a dataset with minimal effort.
+
+Additional avenues of investigation for this architecture would include improving the generalization performance by iterating over different values of beta, experimented with additional augmentation techniques to improve the precision and recall for poorly performing labels and training over a larger # of epochs with more severe regularization.
+
+**4. Test the model on new images**
+
+*4.1 Acquiring new images*
+
+The following 13 images were obtained from a combination of the p-traffic-signs slack channel as well as a google search. The images are plotted below after cropping:
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
