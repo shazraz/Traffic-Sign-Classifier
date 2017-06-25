@@ -20,21 +20,7 @@ The goals / steps of this project are the following:
 [image6]: ./Write-up%20Images/FinalDataHistogram.png "Data Distribution after Final Augmentation"
 [image7]: ./Write-up%20Images/image-processing.png "Image Processing Results"
 [image8]: ./Write-up%20Images/accuracy-loss-final.png "Accuracy, Loss Trends"
-[image9]: ./Images/1-13.jpg "Test Images"
-[image10]: ./Images/2-12.jpg "Test Images"
-[image11]: ./Images/3-28.jpg "Test Images"
-[image12]: ./Images/4-36.jpg "Test Images"
-[image13]: ./Images/5-17.jpg "Test Images"
-[image14]: ./Images/accuracy-loss-final.png "Test Images"
-[image15]: ./Images/accuracy-loss-final.png "Test Images"
-[image16]: ./Images/accuracy-loss-final.png "Test Images"
-[image17]: ./Images/accuracy-loss-final.png "Test Images"
-[image18]: ./Images/accuracy-loss-final.png "Test Images"
-[image19]: ./Images/accuracy-loss-final.png "Test Images"
-[image20]: ./Images/accuracy-loss-final.png "Test Images"
-[image21]: ./Images/accuracy-loss-final.png "Test Images"
-
-
+[image9]: ./Write-up%20Images/softmax.png "Top 5 Probabilities"
 
 ## Rubric Points
 The following sections address the individual [Rubric points](https://review.udacity.com/#!/rubrics/481/view) for this submission. 
@@ -48,7 +34,7 @@ This submission consists of:
 1. An HTML version of the IPython notebook: [Traffic_Sign_Classifier.html](https://github.com/shazraz/P2-TrafficSignClassifier/blob/master/Traffic_Sign_Classifier.html)
 1. The trained and saved model: LeNet5_Run3
 1. A set of images downloaded from the internet used to test the model: [Images](https://github.com/shazraz/P2-TrafficSignClassifier/tree/master/Images)
- {credit: Sonja Krause-Harder for psoting some of these images on the p-traffic-signs Slack channel}
+ {credit: Sonja Krause-Harder for posting some of these images on the p-traffic-signs Slack channel}
 
 **2. Data Set Summary & Exploration**
 
@@ -247,53 +233,53 @@ The following table provides the precision and recall over the test data for eac
 
 | Label | Label name                                         | # of samples | Precision | Recall  |
 |-------|----------------------------------------------------|--------------|-----------|---------|
-| 1     | Speed limit (20km/h)                               | 60           | 95.08%    | 96.67%  |
-| 2     | Speed limit (30km/h)                               | 720          | 92.76%    | 97.92%  |
-| 3     | Speed limit (50km/h)                               | 750          | 95.24%    | 98.67%  |
-| 4     | Speed limit (60km/h)                               | 450          | 95.70%    | 94.00%  |
-| 5     | Speed limit (70km/h)                               | 660          | 98.46%    | 96.67%  |
-| 6     | Speed limit (80km/h)                               | 630          | 94.92%    | 89.05%  |
-| 7     | End of speed limit (80km/h)                        | 150          | 98.63%    | 96.00%  |
-| 8     | Speed limit (100km/h)                              | 450          | 95.46%    | 98.22%  |
-| 9     | Speed limit (120km/h)                              | 450          | 97.70%    | 94.22%  |
-| 10    | No passing                                         | 480          | 99.38%    | 100.00% |
-| 11    | No passing for vehicles over 3.5 metric tons       | 660          | 100.00%   | 97.58%  |
-| 12    | Right-of-way at the next intersection              | 420          | 98.55%    | 97.14%  |
-| 13    | Priority road                                      | 690          | 99.70%    | 96.96%  |
-| 14    | Yield                                              | 720          | 98.76%    | 99.17%  |
-| 15    | Stop                                               | 270          | 99.26%    | 100.00% |
-| 16    | No vehicles                                        | 210          | 88.09%    | 98.57%  |
-| 17    | Vehicles over 3.5 metric tons prohibited           | 150          | 100.00%   | 100.00% |
-| 18    | No entry                                           | 360          | 100.00%   | 99.72%  |
-| 19    | General caution                                    | 390          | 96.86%    | 86.92%  |
-| 20    | Dangerous curve to the left                        | 60           | 73.17%    | 100.00% |
-| 21    | Dangerous curve to the right                       | 90           | 91.67%    | 97.78%  |
-| 22    | Double curve                                       | 90           | 80.25%    | 72.22%  |
-| 23    | Bumpy road                                         | 120          | 91.67%    | 91.67%  |
-| 24    | Slippery road                                      | 150          | 90.07%    | 90.67%  |
-| 25    | Road narrows on the right                          | 90           | 96.39%    | 88.89%  |
-| 26    | Road work                                          | 480          | 96.32%    | 98.12%  |
-| 27    | Traffic signals                                    | 180          | 86.67%    | 86.67%  |
-| 28    | Pedestrians                                        | 60           | 76.39%    | 91.67%  |
-| 29    | Children crossing                                  | 150          | 94.23%    | 98.00%  |
-| 30    | Bicycles crossing                                  | 90           | 93.75%    | 100.00% |
-| 31    | Beware of ice/snow                                 | 150          | 89.13%    | 82.00%  |
-| 32    | Wild animals crossing                              | 270          | 97.41%    | 97.41%  |
-| 33    | End of all speed and passing limits                | 60           | 100.00%   | 98.33%  |
-| 34    | Turn right ahead                                   | 210          | 98.58%    | 99.52%  |
-| 35    | Turn left ahead                                    | 120          | 97.54%    | 99.17%  |
-| 36    | Ahead only                                         | 390          | 98.97%    | 98.97%  |
-| 37    | Go straight or right                               | 120          | 96.77%    | 100.00% |
-| 38    | Go straight or left                                | 60           | 92.19%    | 98.33%  |
-| 39    | Keep right                                         | 690          | 99.71%    | 99.13%  |
-| 40    | Keep left                                          | 90           | 94.68%    | 98.89%  |
-| 41    | Roundabout mandatory                               | 90           | 95.60%    | 96.67%  |
-| 42    | End of no passing                                  | 60           | 100.00%   | 100.00% |
-| 43    | End of no passing by vehicles over 3.5 metric tons | 90           | 98.90%    | 100.00% |
+| 0     | Speed limit (20km/h)                               | 60           | 95.08%    | 96.67%  |
+| 1     | Speed limit (30km/h)                               | 720          | 92.76%    | 97.92%  |
+| 2     | Speed limit (50km/h)                               | 750          | 95.24%    | 98.67%  |
+| 3     | Speed limit (60km/h)                               | 450          | 95.70%    | 94.00%  |
+| 4     | Speed limit (70km/h)                               | 660          | 98.46%    | 96.67%  |
+| 5     | Speed limit (80km/h)                               | 630          | 94.92%    | 89.05%  |
+| 6     | End of speed limit (80km/h)                        | 150          | 98.63%    | 96.00%  |
+| 7     | Speed limit (100km/h)                              | 450          | 95.46%    | 98.22%  |
+| 8     | Speed limit (120km/h)                              | 450          | 97.70%    | 94.22%  |
+| 9    | No passing                                         | 480          | 99.38%    | 100.00% |
+| 10    | No passing for vehicles over 3.5 metric tons       | 660          | 100.00%   | 97.58%  |
+| 11    | Right-of-way at the next intersection              | 420          | 98.55%    | 97.14%  |
+| 12    | Priority road                                      | 690          | 99.70%    | 96.96%  |
+| 13    | Yield                                              | 720          | 98.76%    | 99.17%  |
+| 14    | Stop                                               | 270          | 99.26%    | 100.00% |
+| 15    | No vehicles                                        | 210          | 88.09%    | 98.57%  |
+| 16    | Vehicles over 3.5 metric tons prohibited           | 150          | 100.00%   | 100.00% |
+| 17    | No entry                                           | 360          | 100.00%   | 99.72%  |
+| 18    | General caution                                    | 390          | 96.86%    | 86.92%  |
+| 19    | Dangerous curve to the left                        | 60           | 73.17%    | 100.00% |
+| 20    | Dangerous curve to the right                       | 90           | 91.67%    | 97.78%  |
+| 21    | Double curve                                       | 90           | 80.25%    | 72.22%  |
+| 22    | Bumpy road                                         | 120          | 91.67%    | 91.67%  |
+| 23    | Slippery road                                      | 150          | 90.07%    | 90.67%  |
+| 24    | Road narrows on the right                          | 90           | 96.39%    | 88.89%  |
+| 25    | Road work                                          | 480          | 96.32%    | 98.12%  |
+| 26    | Traffic signals                                    | 180          | 86.67%    | 86.67%  |
+| 27    | Pedestrians                                        | 60           | 76.39%    | 91.67%  |
+| 28    | Children crossing                                  | 150          | 94.23%    | 98.00%  |
+| 29    | Bicycles crossing                                  | 90           | 93.75%    | 100.00% |
+| 30    | Beware of ice/snow                                 | 150          | 89.13%    | 82.00%  |
+| 31    | Wild animals crossing                              | 270          | 97.41%    | 97.41%  |
+| 32    | End of all speed and passing limits                | 60           | 100.00%   | 98.33%  |
+| 33    | Turn right ahead                                   | 210          | 98.58%    | 99.52%  |
+| 34    | Turn left ahead                                    | 120          | 97.54%    | 99.17%  |
+| 35    | Ahead only                                         | 390          | 98.97%    | 98.97%  |
+| 36    | Go straight or right                               | 120          | 96.77%    | 100.00% |
+| 37    | Go straight or left                                | 60           | 92.19%    | 98.33%  |
+| 38    | Keep right                                         | 690          | 99.71%    | 99.13%  |
+| 39    | Keep left                                          | 90           | 94.68%    | 98.89%  |
+| 40    | Roundabout mandatory                               | 90           | 95.60%    | 96.67%  |
+| 41    | End of no passing                                  | 60           | 100.00%   | 100.00% |
+| 42    | End of no passing by vehicles over 3.5 metric tons | 90           | 98.90%    | 100.00% |
 
 It is worth mentioning, almost confessing, at this point that this model is not extensively tweaked. There is likely a better solution for this existing architecture if further iterations of the aforementioned hyper-parameters are conducted. However, the iterative process was abandoned at this stage since the proposed model significantly exceeded the requirements of the project and due to the limitation in available computational resources. Regardless, it was interesting to note that a simple 5 layer architecture was able to provide reasonable performance on a dataset with minimal effort.
 
-Additional avenues of investigation for this architecture would include improving the generalization performance by iterating over different values of beta, experimented with additional augmentation techniques to improve the precision and recall for poorly performing labels and training over a larger # of epochs with more severe regularization.
+Additional avenues of investigation for this architecture would include improving the generalization performance by iterating over different values of beta, experimenting with additional augmentation techniques to improve the precision and recall for poorly performing labels and training over a larger # of epochs with more severe regularization.
 
 **4. Test the model on new images**
 
@@ -301,42 +287,49 @@ Additional avenues of investigation for this architecture would include improvin
 
 The following 13 images were obtained from a combination of the p-traffic-signs slack channel as well as a google search. The images are plotted below after cropping:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+<img src="./Images/1-13.jpg" width="100"> <img src="./Images/2-12.jpg" width="100"> <img src="./Images/3-28.jpg" width="100"> 
+<img src="./Images/4-36.jpg" width="100"> <img src="./Images/5-17.jpg" width="100"> <img src="./Images/6-25.jpg" width="100"> 
+<img src="./Images/7-33.jpg" width="100"> <img src="./Images/8-15.jpg" width="100"> <img src="./Images/9-11.jpg" width="100"> 
+<img src="./Images/10-18.jpg" width="100"> <img src="./Images/11-32.jpg" width="100"> <img src="./Images/12-3.jpg" width="100"> 
+<img src="./Images/13-9.jpg" width="100"> 
 
-The first image might be difficult to classify because ...
+The most concerning images for classification are the ones with finer details i.e. children crossing and roadwork. This assumption is based on the knowledge that the images downloaded needed to be cropped and resized prior to being processed. The resizing was done via OpenCV's resize() function using an inter-area interpolation to minimize the amount of pixelation as a result of downsampling. However, their was concern that the features of these particular signs would be compromised during the resizing which may lead to classification errors.
+
+*4.2 Performance on new images*
 
 ####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
 Here are the results of the prediction:
 
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Image                                 | Prediction                            |
+|---------------------------------------|---------------------------------------|
+| Yield                                 | Yield                                 |
+| General Caution                       | General Caution                       |
+| End of all speed and passing limits   | End of all speed and passing limits   |
+| Speed limit (60 km/hr)                | Speed limit (60 km/hr)                |
+| No passing                            | No passing                            |
+| Priority Road                         | Priority Road                         |
+| Children Crossing                     | Children Crossing                     |
+| Go straight or right                  | Go straight or right                  |
+| No Entry                              | No Entry                              |
+| Road work                             | Road work                             |
+| Turn right ahead                      | Turn right ahead                      |
+| No vehicles                           | No vehicles                           |
+| Right-of-way at the next intersection | Right-of-way at the next intersection |
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess all 13 of the traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the test set of 96.4%. The images chosen in this test were all well-illuminated and unblurred which may have contributed to the favorable test results.
 
-####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+In addition, with the exception of two labels, No Vehicles & General Caution, with low precision (~88%) and recall (~87%) respectively, the remaining labels have relatively high precision and recall percentages on the test dataset which is consistent with the actual performance on these test images.
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+*4.3 Model Certainty/Softmax Probabilities*
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+The images below show the the top 5 probabilities for each of the 13 test signs visualized. The bar chart on the left shows the probability of each of the top 5 predictions with the title of the bar chart as the predicted sign name. The image on the right shows the actual traffic sign and label. The code for making predictions on my final model and visualizing the probabilities are located in the 21st and 23rd cells of the Ipython notebook respectively.
 
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+![alt text][image9]
 
+As seen from the images above, the model is very certain of all test images with the exception of the children crossing sign. In this particular case, the model suspects there is just under a 60% probability of this sign being a children crossing sign and just over a 40% possibility of this sign being a bicycles crossing sign. This uncertainty is attributed to the pixelized nature of the downsized image which has reduced the granularity of the details for this sign.
 
-For the second image ... 
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 ####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
