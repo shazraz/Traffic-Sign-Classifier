@@ -21,6 +21,9 @@ The goals / steps of this project are the following:
 [image7]: ./Write-up%20Images/image-processing.png "Image Processing Results"
 [image8]: ./Write-up%20Images/accuracy-loss-final.png "Accuracy, Loss Trends"
 [image9]: ./Write-up%20Images/softmax.png "Top 5 Probabilities"
+[image10]: ./Write-up%20Images/conv1.png "Conv1 Feature Maps"
+[image11]: ./Write-up%20Images/conv2.png "Conv2 Feature Maps"
+
 
 ## Rubric Points
 The following sections address the individual [Rubric points](https://review.udacity.com/#!/rubrics/481/view) for this submission. 
@@ -63,6 +66,7 @@ In addtion, let's take a look at some of the images in the dataset. The followin
 *3.1 Preprocessing*
 
 3.1.1 Data Augmentation
+
 The first step was to experiment with simple data augmentation using the basic_augment() function. This function is fed with the training data set (X_train, y_train) along with a list of labels that can be mirrored in the x-axis and/or y-axis as well as rotated. By limiting the labels augmented to those that are under-represented in the data set, we can quickly obtain additional images from the existing data set. The image below shows an example of a 38 - Keep Right image that can be mirrored along the Y-axis to create an image with label 39 - Keep left which is an under-represented label.
 
 ![alt text][image3]
@@ -103,7 +107,7 @@ The following table provides an analysis of the labels that can be augmented in 
 | 29      | Bicycles crossing                                  | Y                  |        |        |         |         |           |
 | 30      | Beware of ice/snow                                 | Y                  | X      |        |         |         | 30        |
 | 31      | Wild animals crossing                              |                    |        |        |         |         |           |
-| 32      | End of all speed and passing limits                | Y                  |        |        | X       |         |           |
+| 32      | End of all speed and passing limits                | Y                  |        |        | X       |         | 32        |
 | 33      | Turn right ahead                                   |                    | X      |        |         |         | 34        |
 | 34      | Turn left ahead                                    | Y                  | X      |        |         |         | 33        |
 | 35      | Ahead only                                         |                    | X      |        |         |         | 35        |
@@ -240,7 +244,7 @@ The following table provides the precision and recall over the test data for eac
 | 6     | End of speed limit (80km/h)                        | 150          | 98.63%    | 96.00%  |
 | 7     | Speed limit (100km/h)                              | 450          | 95.46%    | 98.22%  |
 | 8     | Speed limit (120km/h)                              | 450          | 97.70%    | 94.22%  |
-| 9    | No passing                                         | 480          | 99.38%    | 100.00% |
+| 9     | No passing                                         | 480          | 99.38%    | 100.00% |
 | 10    | No passing for vehicles over 3.5 metric tons       | 660          | 100.00%   | 97.58%  |
 | 11    | Right-of-way at the next intersection              | 420          | 98.55%    | 97.14%  |
 | 12    | Priority road                                      | 690          | 99.70%    | 96.96%  |
@@ -291,7 +295,7 @@ The following 13 images were obtained from a combination of the p-traffic-signs 
 <img src="./Images/10-18.jpg" width="100"> <img src="./Images/11-32.jpg" width="100"> <img src="./Images/12-3.jpg" width="100"> 
 <img src="./Images/13-9.jpg" width="100"> 
 
-The most concerning images for classification are the ones with finer details i.e. children crossing and roadwork. This assumption is based on the knowledge that the images downloaded needed to be cropped and resized prior to being processed. The resizing was done via OpenCV's resize() function using an inter-area interpolation to minimize the amount of pixelation as a result of downsampling. However, their was concern that the features of these particular signs would be compromised during the resizing which may lead to classification errors.
+The most concerning images for classification are the ones with finer details i.e. children crossing and roadwork. This assumption is based on the knowledge that the images downloaded needed to be cropped and resized prior to being processed. The resizing was done via OpenCV's resize() function using an inter-area interpolation to minimize the amount of pixelation as a result of downsampling. However, there was concern that the features of these particular signs would be compromised during the resizing which may lead to classification errors.
 
 *4.2 Performance on new images*
 
@@ -327,7 +331,12 @@ As seen from the images above, the model is very certain of all test images with
 
 **5. Visualizing the Neural Network**
 
-### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+The two images below show visualizations of the feature maps from the first and second convolution layers in the model. The input to the model is the processed Yield sign image that was the first test image from the set downloaded from the internet.
+
+![alt text][image10]
+
+![alt text][image11]
+
+The feature maps of the first convolution layer seem to imply that the model is identifying and learning the various edges of the Yield sign image. However, since this visualization is grayscale it is difficult to interpret any learning of the color information that is passed to this layer since the training image input has dimensions (32,32,4). The output of the second convolution layer seems to be much more abstract and it is difficult to draw any meaningful conclusions from the visualized images.
 
 
