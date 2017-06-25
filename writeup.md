@@ -60,8 +60,6 @@ In addtion, let's take a look at some of the images in the dataset. The followin
 
 **3. Design and Test a Model Architecture**
 
-####1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
-
 *3.1 Preprocessing*
 
 3.1.1 Data Augmentation
@@ -173,10 +171,10 @@ The final model consisted of the following layers:
 | Max pooling				| 2x2 stride, valid padding, outputs 5x5x20        									|
 |	Fully Connected Layer L3					| Input flattened 500 dims from previous max pooling layer, outputs 120												|
 | RELU Activation						|												|
-| Dropout						|	Keep_prob:0.5											|
+| Dropout						|	 											|
 | Fully Connected Layer L4						|	outputs 84											|
 | RELU Activation						|												|
-| Dropout						|	Keep_prob:0.5											|
+| Dropout						|	 											|
 | Fully Connected Layer L5						|	outputs 43											|
 
 The layers are based on the LeNet lab exercise from the Udacity course material with the input and output dimensions adjusted for the merged gray-RGB images being passed into the model. The model also includes two dropout layers after the first two fully connected layers to improve the generalization performance.
@@ -277,7 +275,7 @@ The following table provides the precision and recall over the test data for eac
 | 41    | End of no passing                                  | 60           | 100.00%   | 100.00% |
 | 42    | End of no passing by vehicles over 3.5 metric tons | 90           | 98.90%    | 100.00% |
 
-It is worth mentioning, almost confessing, at this point that this model is not extensively tweaked. There is likely a better solution for this existing architecture if further iterations of the aforementioned hyper-parameters are conducted. However, the iterative process was abandoned at this stage since the proposed model significantly exceeded the requirements of the project and due to the limitation in available computational resources. Regardless, it was interesting to note that a simple 5 layer architecture was able to provide reasonable performance on a dataset with minimal effort.
+It is worth mentioning, almost confessing, at this point that this model is not extensively tweaked. There is likely a better solution for this existing architecture if further iterations of the aforementioned hyper-parameters are conducted. However, the iterative process was abandoned at this stage since the proposed model significantly exceeded the requirements of the project and due to the limitation in available computational resources. Regardless, it was interesting to note that a simple 5 layer architecture was able to provide reasonable performance on this traffic sign dataset with minimal effort.
 
 Additional avenues of investigation for this architecture would include improving the generalization performance by iterating over different values of beta, experimenting with additional augmentation techniques to improve the precision and recall for poorly performing labels and training over a larger # of epochs with more severe regularization.
 
@@ -297,8 +295,6 @@ The most concerning images for classification are the ones with finer details i.
 
 *4.2 Performance on new images*
 
-####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
-
 Here are the results of the prediction:
 
 | Image                                 | Prediction                            |
@@ -317,7 +313,6 @@ Here are the results of the prediction:
 | No vehicles                           | No vehicles                           |
 | Right-of-way at the next intersection | Right-of-way at the next intersection |
 
-
 The model was able to correctly guess all 13 of the traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the test set of 96.4%. The images chosen in this test were all well-illuminated and unblurred which may have contributed to the favorable test results.
 
 In addition, with the exception of two labels, No Vehicles & General Caution, with low precision (~88%) and recall (~87%) respectively, the remaining labels have relatively high precision and recall percentages on the test dataset which is consistent with the actual performance on these test images.
@@ -330,6 +325,7 @@ The images below show the the top 5 probabilities for each of the 13 test signs 
 
 As seen from the images above, the model is very certain of all test images with the exception of the children crossing sign. In this particular case, the model suspects there is just under a 60% probability of this sign being a children crossing sign and just over a 40% possibility of this sign being a bicycles crossing sign. This uncertainty is attributed to the pixelized nature of the downsized image which has reduced the granularity of the details for this sign.
 
+**5. Visualizing the Neural Network**
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 ####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
