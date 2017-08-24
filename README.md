@@ -14,18 +14,17 @@
 [image11]: ./graphics/conv2.png "Conv2 Feature Maps"
 
 ---
-**1. Repository Files**
+## **1. Introduction**
 
 This repo consists of:
 
-1. The IPython notebook containing the project code: [Traffic_Sign_Classifier.ipynb](https://github.com/shazraz/P2-TrafficSignClassifier/blob/master/Traffic_Sign_Classifier.ipynb)
-1. The trained and saved model: LeNet5_Run3
-1. A set of images downloaded from the internet used to test the model: [Images](https://github.com/shazraz/P2-TrafficSignClassifier/tree/master/Images)
- {credit: Sonja Krause-Harder for posting some of these images on the p-traffic-signs Slack channel}
+1. The IPython notebook containing the project code: [Traffic_Sign_Classifier](https://github.com/shazraz/P2-TrafficSignClassifier/blob/master/Traffic_Sign_Classifier.ipynb)
+1. The trained and saved model: [LeNet5](https://github.com/shazraz/Traffic-Sign-Classifier/tree/master/model)
+1. A set of publicly available test images downloaded from the internet used to test the model: [Test Images](https://github.com/shazraz/P2-TrafficSignClassifier/tree/master/Images)
 
-**2. Data Set Summary & Exploration**
+## **2. Data Set Visualizations**
 
-*2.1 Data Set Summary*
+### 2.1 Data Set Summary
 
 I used the numpy library to calculate summary statistics of the traffic signs data set:
 
@@ -35,7 +34,7 @@ I used the numpy library to calculate summary statistics of the traffic signs da
 * The shape of a traffic sign image is (32,32,3)
 * The number of unique classes/labels in the data set is 43
 
-*2.2 Exploratory Visualization of the dataset*
+### 2.2 Exploratory Visualization of the dataset
 
 Here is an exploratory visualization of the data set. The histogram below shows the relative distribution of each of the three data splits (training, validation & test) for each of the 43 labels in the data. A number of the labels aren't adequately represented and training a model on this dataset without any augmentation will result in a model biased towards the over-represented labels. 
 
@@ -45,11 +44,9 @@ In addtion, let's take a look at some of the images in the dataset. The followin
 
 ![alt text][image2]
 
-**3. Design and Test a Model Architecture**
+## **3. Data Processing**
 
-*3.1 Preprocessing*
-
-3.1.1 Data Augmentation
+### 3.1 Data Augmentation
 
 The first step was to experiment with simple data augmentation using the basic_augment() function. This function is fed with the training data set (X_train, y_train) along with a list of labels that can be mirrored in the x-axis and/or y-axis as well as rotated. By limiting the labels augmented to those that are under-represented in the data set, we can quickly obtain additional images from the existing data set. The image below shows an example of a 38 - Keep Right image that can be mirrored along the Y-axis to create an image with label 39 - Keep left which is an under-represented label.
 
@@ -125,7 +122,7 @@ This augmentation allows us to extend the training set from an original size of 
 
 It is worth mentioning that randomly augmenting the brightness of the image was also experimented with but this seemed to have a detrimental effect on the observed image quality. In particular, artifacts were observed in the image, therefore brightness augmentation was not done.
 
-3.1.2 Image Processing
+### 3.2 Image Processing
 
 One the dataset is balanced, the images now need to be further processed before used for training. This image processing consists of a number of steps:
 
@@ -142,7 +139,7 @@ The following image shows a 17 - No Entry sign at index 35242 of the final augme
 
 This final augmented & processed training data set is now ready to be fed into the model for training.
 
-*3.2 Model Architecture*
+## **4. Model Architecture**
 
 During the course of investigating alternative models for the potential architecture, a number of additional well-reknowned architectures were examined from the list of ILSVRC winners over the past years (e.g. AlexNet, VGG, GoogLeNet, ResNet, etc.). However, this traffic sign classifier model was based on the LeNet-5 architecture examined in the Udacity course lectures. The decision was based on implementing a known, simple architecture that could be trained easily on limited computing resources to see it's effectiveness.
 
@@ -167,7 +164,7 @@ The final model consisted of the following layers:
 
 The layers are based on the LeNet lab exercise from the Udacity course material with the input and output dimensions adjusted for the merged gray-RGB images being passed into the model. The model also includes two dropout layers after the first two fully connected layers to improve the generalization performance.
 
-*3.3 Model Training*
+### 4.1 Model Training
 
 The LeNet-5 architecture was initially trained using an Adam optimizer with the following hyper-parameters on a dataset with basic augmentation and only grayscale images. The starting weights and biases were initialized using the tensorflow truncated normal function with an average of 0 and a std dev of 0.1.
 
@@ -178,7 +175,7 @@ The LeNet-5 architecture was initially trained using an Adam optimizer with the 
 
 The training was conducted on an Intel i7-5600 series CPU which took approximately 10-20 minutes depending on the size of the dataset (augmented vs un-augmented) and number of epochs. A discussion of training approach is provided below.
 
-*3.4 Solution Approach*
+### 4.2 Solution Approach
 
 The initial training run already revealed a validation accuracy just north of the required 93%. However, it was felt that this could be significantly improved since many of the methodologies recommended in the lectures had not been implemented. As a result, several concepts were introduced into the training model one at a time to observe their effect on the overall validation accuracy. The steps roughly followed the proceeding order:
 
@@ -267,9 +264,9 @@ It is worth mentioning, almost confessing, at this point that this model is not 
 
 Additional avenues of investigation for this architecture would include improving the generalization performance by iterating over different values of beta, experimenting with additional augmentation techniques to improve the precision and recall for poorly performing labels and training over a larger # of epochs with more severe regularization.
 
-**4. Test the model on new images**
+## **5. Model Testing**
 
-*4.1 Acquiring new images*
+### 5.1 Acquiring new images
 
 The following 13 images were obtained from a combination of the p-traffic-signs slack channel as well as a google search. The images are plotted below after cropping:
 
@@ -281,7 +278,7 @@ The following 13 images were obtained from a combination of the p-traffic-signs 
 
 The most concerning images for classification are the ones with finer details i.e. children crossing and roadwork. This assumption is based on the knowledge that the images downloaded needed to be cropped and resized prior to being processed. The resizing was done via OpenCV's resize() function using an inter-area interpolation to minimize the amount of pixelation as a result of downsampling. However, there was concern that the features of these particular signs would be compromised during the resizing which may lead to classification errors.
 
-*4.2 Performance on new images*
+### 5.2 Performance on new images
 
 Here are the results of the prediction:
 
@@ -305,7 +302,7 @@ The model was able to correctly guess all 13 of the traffic signs, which gives a
 
 In addition, with the exception of two labels, No Vehicles & General Caution, with low precision (~88%) and recall (~87%) respectively, the remaining labels have relatively high precision and recall percentages on the test dataset which is consistent with the actual performance on these test images.
 
-*4.3 Model Certainty/Softmax Probabilities*
+### 5.3 Model Certainty/Softmax Probabilities
 
 The images below show the the top 5 probabilities for each of the 13 test signs visualized. The bar chart on the left shows the probability of each of the top 5 predictions with the title of the bar chart as the predicted sign name. The image on the right shows the actual traffic sign and label. The code for making predictions on my final model and visualizing the probabilities are located in the 21st and 23rd cells of the Ipython notebook respectively.
 
@@ -313,7 +310,7 @@ The images below show the the top 5 probabilities for each of the 13 test signs 
 
 As seen from the images above, the model is very certain of all test images with the exception of the children crossing sign. In this particular case, the model suspects there is just under a 60% probability of this sign being a children crossing sign and just over a 40% possibility of this sign being a bicycles crossing sign. This uncertainty is attributed to the pixelized nature of the downsized image which has reduced the granularity of the details for this sign.
 
-**5. Visualizing the Neural Network**
+## **6. Visualizing the Neural Network**
 
 The two images below show visualizations of the feature maps from the first and second convolution layers in the model. The input to the model is the processed Yield sign image that was the first test image from the set downloaded from the internet.
 
