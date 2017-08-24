@@ -1,17 +1,17 @@
 # **Traffic Sign Classification** 
 
 [//]: # (Image References)
-[image1]: ./Write-up%20Images/DataHistogram.png "Visualization"
-[image2]: ./Write-up%20Images/10-image-set.png "31 - Wild Animals Crossing"
-[image3]: ./Write-up%20Images/y-flipped_image.png "Image Mirrored along Y-axis"
-[image4]: ./Write-up%20Images/AugDataHistogram.png "Data Distribution after Basic Augmentation"
-[image5]: ./Write-up%20Images/augmentation.png "Augmentation via Translation/Rotation"
-[image6]: ./Write-up%20Images/FinalDataHistogram.png "Data Distribution after Final Augmentation"
-[image7]: ./Write-up%20Images/image-processing.png "Image Processing Results"
-[image8]: ./Write-up%20Images/accuracy-loss-final.png "Accuracy, Loss Trends"
-[image9]: ./Write-up%20Images/softmax.png "Top 5 Probabilities"
-[image10]: ./Write-up%20Images/conv1.png "Conv1 Feature Maps"
-[image11]: ./Write-up%20Images/conv2.png "Conv2 Feature Maps"
+[image1]: ./graphics/DataHistogram.png "Visualization"
+[image2]: ./graphics/10-image-set.png "31 - Wild Animals Crossing"
+[image3]: ./graphics/y-flipped_image.png "Image Mirrored along Y-axis"
+[image4]: ./graphics/AugDataHistogram.png "Data Distribution after Basic Augmentation"
+[image5]: ./graphics/augmentation.png "Augmentation via Translation/Rotation"
+[image6]: ./graphics/FinalDataHistogram.png "Data Distribution after Final Augmentation"
+[image7]: ./graphics/image-processing.png "Image Processing Results"
+[image8]: ./graphics/accuracy-loss-final.png "Accuracy, Loss Trends"
+[image9]: ./graphics/softmax.png "Top 5 Probabilities"
+[image10]: ./graphics/conv1.png "Conv1 Feature Maps"
+[image11]: ./graphics/conv2.png "Conv2 Feature Maps"
 
 ---
 **1. Repository Files**
@@ -273,11 +273,11 @@ Additional avenues of investigation for this architecture would include improvin
 
 The following 13 images were obtained from a combination of the p-traffic-signs slack channel as well as a google search. The images are plotted below after cropping:
 
-<img src="./Images/1-13.jpg" width="100"> <img src="./Images/2-12.jpg" width="100"> <img src="./Images/3-28.jpg" width="100"> 
-<img src="./Images/4-36.jpg" width="100"> <img src="./Images/5-17.jpg" width="100"> <img src="./Images/6-25.jpg" width="100"> 
-<img src="./Images/7-33.jpg" width="100"> <img src="./Images/8-15.jpg" width="100"> <img src="./Images/9-11.jpg" width="100"> 
-<img src="./Images/10-18.jpg" width="100"> <img src="./Images/11-32.jpg" width="100"> <img src="./Images/12-3.jpg" width="100"> 
-<img src="./Images/13-9.jpg" width="100"> 
+<img src="./test_images/1-13.jpg" width="100"> <img src="./test_images/2-12.jpg" width="100"> <img src="./test_images/3-28.jpg" width="100"> 
+<img src="./test_images/4-36.jpg" width="100"> <img src="./test_images/5-17.jpg" width="100"> <img src="./test_images/6-25.jpg" width="100"> 
+<img src="./test_images/7-33.jpg" width="100"> <img src="./test_images/8-15.jpg" width="100"> <img src="./test_images/9-11.jpg" width="100"> 
+<img src="./test_images/10-18.jpg" width="100"> <img src="./test_images/11-32.jpg" width="100"> <img src="./test_images/12-3.jpg" width="100"> 
+<img src="./test_images/13-9.jpg" width="100"> 
 
 The most concerning images for classification are the ones with finer details i.e. children crossing and roadwork. This assumption is based on the knowledge that the images downloaded needed to be cropped and resized prior to being processed. The resizing was done via OpenCV's resize() function using an inter-area interpolation to minimize the amount of pixelation as a result of downsampling. However, there was concern that the features of these particular signs would be compromised during the resizing which may lead to classification errors.
 
