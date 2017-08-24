@@ -13,34 +13,35 @@
 [image10]: ./graphics/conv1.png "Conv1 Feature Maps"
 [image11]: ./graphics/conv2.png "Conv2 Feature Maps"
 
----
+
 ## **1. Introduction**
+
+This project explores the use of deep learning to perform Traffic Sign Classification using the [German Traffic Sign Recognition Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset). The dataset is first explored to visualize the training images and appropriate pre-processing and augmentation techniques are applied to balance the data. A LeNet-5 architecture is then implemented in TensorFlow and trained using the augmented training data. Finally, the model is evalued against some additional traffic sign images sources from the internet. This project was completed as part of Udacity's Self Driving Car Nanodegree Program.
 
 This repo consists of:
 
-1. The IPython notebook containing the project code: [Traffic_Sign_Classifier](https://github.com/shazraz/P2-TrafficSignClassifier/blob/master/Traffic_Sign_Classifier.ipynb)
-1. The trained and saved model: [LeNet5](https://github.com/shazraz/Traffic-Sign-Classifier/tree/master/model)
-1. A set of publicly available test images downloaded from the internet used to test the model: [Test Images](https://github.com/shazraz/P2-TrafficSignClassifier/tree/master/Images)
+1. A [jupyter notebook](https://github.com/shazraz/P2-TrafficSignClassifier/blob/master/Traffic_Sign_Classifier.ipynb) containing the  code 
+1. The trained and saved [model](https://github.com/shazraz/Traffic-Sign-Classifier/tree/master/model)
+1. A set of publicly available [test images](https://github.com/shazraz/P2-TrafficSignClassifier/tree/master/Images) downloaded from the internet used to test the model
 
-## **2. Data Set Visualizations**
+## **2. Dataset Exploration**
 
 ### 2.1 Data Set Summary
 
-I used the numpy library to calculate summary statistics of the traffic signs data set:
+The dataset provided by Udacity is a processed version of the original German Traffic Sign dataset already split into a training, validation and testing set with the following characteristics:
 
-* The size of training set is 34799 images
-* The size of the validation set is 4410
-* The size of test set is 12630
-* The shape of a traffic sign image is (32,32,3)
-* The number of unique classes/labels in the data set is 43
+* Traffic sign image shape: (32,32,3)
+* Number of classes: 43
+* Training set size: 34799 images
+* Validation set size: 4410
+* Test set size: 12630
 
-### 2.2 Exploratory Visualization of the dataset
-
-Here is an exploratory visualization of the data set. The histogram below shows the relative distribution of each of the three data splits (training, validation & test) for each of the 43 labels in the data. A number of the labels aren't adequately represented and training a model on this dataset without any augmentation will result in a model biased towards the over-represented labels. 
+### 2.2 Dataset Visualization
+The histogram below shows the relative distribution of each of the three data splits (training, validation & test) for each of the 43 labels in the data. A number of the labels aren't adequately represented and training a model on this dataset without any augmentation will result in a model biased towards the over-represented labels. 
 
 ![alt text][image1]
 
-In addtion, let's take a look at some of the images in the dataset. The following image shows a plot of 10 sequential images starting randomly somewhere in the training data set. The images are from Label 31 - Wild Animals Crossing and appear to be poorly illuminated in some instances and some pre-processing will be required to produce better results when training the model.
+In addition, let's take a look at some of the images in the dataset. The following image shows a plot of 10 sequential images starting randomly somewhere in the training data set. The images are from Label 31 - Wild Animals Crossing and appear to be poorly illuminated in some instances and some pre-processing will be required to produce better results when training the model.
 
 ![alt text][image2]
 
@@ -48,7 +49,7 @@ In addtion, let's take a look at some of the images in the dataset. The followin
 
 ### 3.1 Data Augmentation
 
-The first step was to experiment with simple data augmentation using the basic_augment() function. This function is fed with the training data set (X_train, y_train) along with a list of labels that can be mirrored in the x-axis and/or y-axis as well as rotated. By limiting the labels augmented to those that are under-represented in the data set, we can quickly obtain additional images from the existing data set. The image below shows an example of a 38 - Keep Right image that can be mirrored along the Y-axis to create an image with label 39 - Keep left which is an under-represented label.
+The first step was to experiment with simple data augmentation using the ```basic_augment()``` function. This function is fed with the training data set (X_train, y_train) along with a list of labels that can be mirrored in the x-axis and/or y-axis as well as rotated. By limiting the labels augmented to those that are under-represented in the data set, we can quickly obtain additional images from the existing data set. The image below shows an example of a 38 - Keep Right image that can be mirrored along the Y-axis to create an image with label 39 - Keep left which is an under-represented label.
 
 ![alt text][image3]
 
@@ -104,7 +105,7 @@ The following histogram shows a result of basic augmentation with a number of un
 
 ![alt text][image4]
 
-Consequently, minor random pertubations were applied to the training set images to further balance the dataset. This consisted of translating the images along the both the x and y axes by a random amount within a fixed range or rotating the images about their center by a random amount within a fixed range. This was accomplished by the use of the augment_set() function which was passed a number of parameters including the dataset of images and labels, the labels within the dataset to augment, the minimum threshold quantity of each label and the ranges for the translation and rotation when augmenting the dataset. This led to the introduction of the following hyper-parameters within the model and their corresponding values used for augmentation:
+Consequently, minor random pertubations were applied to the training set images to further balance the dataset. This consisted of translating the images along the both the x and y axes by a random amount within a fixed range or rotating the images about their center by a random amount within a fixed range. This was accomplished by the use of the ```augment_set()``` function which was passed a number of parameters including the dataset of images and labels, the labels within the dataset to augment, the minimum threshold quantity of each label and the ranges for the translation and rotation when augmenting the dataset. This led to the introduction of the following hyper-parameters within the model and their corresponding values used for augmentation:
 
 * n_threshold: 1500,  threshold quantity of images within each label
 * rt_range: 15, range of rotation for each image
@@ -124,10 +125,10 @@ It is worth mentioning that randomly augmenting the brightness of the image was 
 
 ### 3.2 Image Processing
 
-One the dataset is balanced, the images now need to be further processed before used for training. This image processing consists of a number of steps:
+Once the dataset is balanced, the images are processed before used for training. This image processing consists of a number of steps:
 
-1. Conversion of images to grayscale using OpenCV to allow the model to train on traffic sign features
-1. Image histogram equalization using the OpenCV CLAHE (Constrast-Limited Adaptive Histogram Equalization) to improve the illumination in the images. The poor brightness across some images can be seen in the data set visualization presented earlier in Section 2.2 Conversely, there are images included in the dataset that are over-exposed and also need to be normalized. This equalization is carried out on both the RGB images and grayscale images independently. The use of the CLAHE algorithm was based on the OpenCV [documentation](http://docs.opencv.org/3.1.0/d5/daf/tutorial_py_histogram_equalization.html) and introduces two additional hyper-parameters:
+1. Conversion of images to grayscale using openCV to allow the model to train on traffic sign features
+1. Image histogram equalization using the openCV CLAHE (Constrast-Limited Adaptive Histogram Equalization) algorithm to improve the illumination in the images. The poor brightness across some images can be seen in the data set visualization presented earlier in Section 2.2 Conversely, there are images included in the dataset that are over-exposed and also need to be normalized. This equalization is carried out on both the RGB images and grayscale images independently. The use of the CLAHE algorithm was based on the OpenCV [documentation](http://docs.opencv.org/3.1.0/d5/daf/tutorial_py_histogram_equalization.html) and introduces two additional hyper-parameters:
      * Tile Grid Size: 4x4, defines the # of tiles the image is divided into prior to equalization
      * Clip Limit: 2.0, defines the upper contrast limit of tiles to prevent noise amplification 
 1. The (32,32,1) equalized grayscale images and (32,32,3) equalized RGB images are then merged to create a combined image of dimensions (32,32,4). This is done to provide the model with both the grayscale features as well as the color information embedded within the image which provides additional information for the classifier to train on.
@@ -141,7 +142,7 @@ This final augmented & processed training data set is now ready to be fed into t
 
 ## **4. Model Architecture**
 
-During the course of investigating alternative models for the potential architecture, a number of additional well-reknowned architectures were examined from the list of ILSVRC winners over the past years (e.g. AlexNet, VGG, GoogLeNet, ResNet, etc.). However, this traffic sign classifier model was based on the LeNet-5 architecture examined in the Udacity course lectures. The decision was based on implementing a known, simple architecture that could be trained easily on limited computing resources to see it's effectiveness.
+During the course of investigating alternative models for the potential architecture, a number of additional well-reknowned architectures were examined from the list of ILSVRC winners over the past years (e.g. AlexNet, VGG, GoogLeNet, ResNet, etc.). However, this traffic sign classifier model was based on the LeNet-5 to focus on implementing a known, simple architecture that could be trained easily on limited computing resources to see it's effectiveness. The input and output dimensions of the input layer are adjusted for the merged gray-RGB images being passed into the model. The model also includes two dropout layers after the first two fully connected layers to improve generalization.
 
 The final model consisted of the following layers:
 
@@ -162,8 +163,6 @@ The final model consisted of the following layers:
 | Dropout						|	 											|
 | Fully Connected Layer L5						|	outputs 43											|
 
-The layers are based on the LeNet lab exercise from the Udacity course material with the input and output dimensions adjusted for the merged gray-RGB images being passed into the model. The model also includes two dropout layers after the first two fully connected layers to improve the generalization performance.
-
 ### 4.1 Model Training
 
 The LeNet-5 architecture was initially trained using an Adam optimizer with the following hyper-parameters on a dataset with basic augmentation and only grayscale images. The starting weights and biases were initialized using the tensorflow truncated normal function with an average of 0 and a std dev of 0.1.
@@ -177,7 +176,7 @@ The training was conducted on an Intel i7-5600 series CPU which took approximate
 
 ### 4.2 Solution Approach
 
-The initial training run already revealed a validation accuracy just north of the required 93%. However, it was felt that this could be significantly improved since many of the methodologies recommended in the lectures had not been implemented. As a result, several concepts were introduced into the training model one at a time to observe their effect on the overall validation accuracy. The steps roughly followed the proceeding order:
+Once the initial model was implemented, the hyper-parameters were varied one at a time to observe their effect on the overall validation accuracy. The steps roughly followed the proceeding order:
 
    * Increase # of epochs
    * Decrease learning rate
@@ -185,11 +184,11 @@ The initial training run already revealed a validation accuracy just north of th
    * Convert dataset from grayscale images to 4-channel grayscale/RGB images (i.e. increasing # of model parameters)
    * Apply augmentation using pertubations of original images
    * Adjust Keep Probability used in Dropout layers
-   * Introduce L2 norm regularization and experiment with values of beta
+   * Introducing L2 norm regularization 
  
 At each step, a single hyper-parameter was adjusted to determine a general trend in the performance of the model. The accuracy and loss trends were observed to make a decision on which parameter to adjust next. e.g. once overfitting was observed, the generalization performance of the model was improved by augmenting the data by different amounts by adjusting n_threshold, adjusting the dropout probability and varying the severity of the pertubations with rt_range and xlate_range one at a time and observing the effects on the accuracy/loss plots. 
 
-The accuracy/loss plots were generated by modifying the evaluate() function to return both accuracy and loss and saving them an in array during training for both the training and validation datasets.
+The accuracy/loss plots were generated by the ```evaluate()``` function to return both accuracy and loss and saving them an in array during training for both the training and validation datasets.
 
 In total, each of the hyper-parameters below were adjusted until the provided listed final values were obtained:
 
@@ -260,7 +259,7 @@ The following table provides the precision and recall over the test data for eac
 | 41    | End of no passing                                  | 60           | 100.00%   | 100.00% |
 | 42    | End of no passing by vehicles over 3.5 metric tons | 90           | 98.90%    | 100.00% |
 
-It is worth mentioning, almost confessing, at this point that this model is not extensively tweaked. There is likely a better solution for this existing architecture if further iterations of the aforementioned hyper-parameters are conducted. However, the iterative process was abandoned at this stage since the proposed model significantly exceeded the requirements of the project and due to the limitation in available computational resources. Regardless, it was interesting to note that a simple 5 layer architecture was able to provide reasonable performance on this traffic sign dataset with minimal effort.
+It is worth mentioning at this point that this model is not extensively tweaked. There is likely a better solution for this existing architecture if further iterations of the aforementioned hyper-parameters are conducted. However, the iterative process was abandoned at this stage since the proposed model significantly exceeded the requirements of the project and due to the limitation in available computational resources. Regardless, it was interesting to note that a simple 5 layer architecture was able to provide reasonable performance on this traffic sign dataset with minimal effort.
 
 Additional avenues of investigation for this architecture would include improving the generalization performance by iterating over different values of beta, experimenting with additional augmentation techniques to improve the precision and recall for poorly performing labels and training over a larger # of epochs with more severe regularization.
 
@@ -276,35 +275,15 @@ The following 13 images were obtained from a combination of the p-traffic-signs 
 <img src="./test_images/10-18.jpg" width="100"> <img src="./test_images/11-32.jpg" width="100"> <img src="./test_images/12-3.jpg" width="100"> 
 <img src="./test_images/13-9.jpg" width="100"> 
 
-The most concerning images for classification are the ones with finer details i.e. children crossing and roadwork. This assumption is based on the knowledge that the images downloaded needed to be cropped and resized prior to being processed. The resizing was done via OpenCV's resize() function using an inter-area interpolation to minimize the amount of pixelation as a result of downsampling. However, there was concern that the features of these particular signs would be compromised during the resizing which may lead to classification errors.
+The most concerning images for classification are the ones with finer details i.e. children crossing and roadwork. This is because the images downloaded needed to be cropped and resized prior to being processed. The resizing was done via openCV's ```resize()``` function using an inter-area interpolation to minimize the amount of pixelation as a result of downsampling. However, there was concern that the features of these particular signs would be compromised during the resizing which may lead to classification errors. Here is a good [resource](http://tanbakuchi.com/posts/comparison-of-openv-interpolation-algorithms/) for comparison of openCV's interpolation algorithms.
 
-### 5.2 Performance on new images
+### 5.2 Model Certainty/Softmax Probabilities
 
-Here are the results of the prediction:
-
-| Image                                 | Prediction                            |
-|---------------------------------------|---------------------------------------|
-| Yield                                 | Yield                                 |
-| General Caution                       | General Caution                       |
-| End of all speed and passing limits   | End of all speed and passing limits   |
-| Speed limit (60 km/hr)                | Speed limit (60 km/hr)                |
-| No passing                            | No passing                            |
-| Priority Road                         | Priority Road                         |
-| Children Crossing                     | Children Crossing                     |
-| Go straight or right                  | Go straight or right                  |
-| No Entry                              | No Entry                              |
-| Road work                             | Road work                             |
-| Turn right ahead                      | Turn right ahead                      |
-| No vehicles                           | No vehicles                           |
-| Right-of-way at the next intersection | Right-of-way at the next intersection |
+The images below show the the top 5 probabilities for each of the 13 test signs visualized. The bar chart on the left shows the probability of each of the top 5 predictions with the title of the bar chart as the predicted sign name. The image on the right shows the actual traffic sign and label.
 
 The model was able to correctly guess all 13 of the traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the test set of 96.4%. The images chosen in this test were all well-illuminated and unblurred which may have contributed to the favorable test results.
 
 In addition, with the exception of two labels, No Vehicles & General Caution, with low precision (~88%) and recall (~87%) respectively, the remaining labels have relatively high precision and recall percentages on the test dataset which is consistent with the actual performance on these test images.
-
-### 5.3 Model Certainty/Softmax Probabilities
-
-The images below show the the top 5 probabilities for each of the 13 test signs visualized. The bar chart on the left shows the probability of each of the top 5 predictions with the title of the bar chart as the predicted sign name. The image on the right shows the actual traffic sign and label. The code for making predictions on my final model and visualizing the probabilities are located in the 21st and 23rd cells of the Ipython notebook respectively.
 
 ![alt text][image9]
 
