@@ -1,19 +1,5 @@
 # **Traffic Sign Classification** 
 
-[//]: # (Image References)
-[image1]: ./graphics/DataHistogram.png "Visualization"
-[image2]: ./graphics/10-image-set.png "31 - Wild Animals Crossing"
-[image3]: ./graphics/y-flipped_image.png "Image Mirrored along Y-axis"
-[image4]: ./graphics/AugDataHistogram.png "Data Distribution after Basic Augmentation"
-[image5]: ./graphics/augmentation.png "Augmentation via Translation/Rotation"
-[image6]: ./graphics/FinalDataHistogram.png "Data Distribution after Final Augmentation"
-[image7]: ./graphics/image-processing.png "Image Processing Results"
-[image8]: ./graphics/accuracy-loss-final.png "Accuracy, Loss Trends"
-[image9]: ./graphics/softmax.png "Top 5 Probabilities"
-[image10]: ./graphics/conv1.png "Conv1 Feature Maps"
-[image11]: ./graphics/conv2.png "Conv2 Feature Maps"
-
-
 ## **1. Introduction**
 
 This project explores the use of deep learning to perform Traffic Sign Classification using the [German Traffic Sign Recognition Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset). The dataset is first explored to visualize the training images and appropriate pre-processing and augmentation techniques are applied to balance the data. A LeNet-5 architecture is then implemented in TensorFlow and trained using the augmented training data. Finally, the model is evalued against some additional traffic sign images sources from the internet. This project was completed as part of Udacity's Self Driving Car Nanodegree Program.
@@ -39,11 +25,16 @@ The dataset provided by Udacity is a processed version of the original German Tr
 ### 2.2 Dataset Visualization
 The histogram below shows the relative distribution of each of the three data splits (training, validation & test) for each of the 43 labels in the data. A number of the labels aren't adequately represented and training a model on this dataset without any augmentation will result in a model biased towards the over-represented labels. 
 
-![alt text][image1]
+<p align="center">
+<img src="./graphics/datahist.png">
+</p>
 
 In addition, let's take a look at some of the images in the dataset. The following image shows a plot of 10 sequential images starting randomly somewhere in the training data set. The images are from Label 31 - Wild Animals Crossing and appear to be poorly illuminated in some instances and some pre-processing will be required to produce better results when training the model.
 
-![alt text][image2]
+
+<p align="center">
+<img src="./graphics/label-images.png">
+</p>
 
 ## **3. Data Processing**
 
@@ -51,7 +42,10 @@ In addition, let's take a look at some of the images in the dataset. The followi
 
 The first step was to experiment with simple data augmentation using the ```basic_augment()``` function. This function is fed with the training data set (X_train, y_train) along with a list of labels that can be mirrored in the x-axis and/or y-axis as well as rotated. By limiting the labels augmented to those that are under-represented in the data set, we can quickly obtain additional images from the existing data set. The image below shows an example of a 38 - Keep Right image that can be mirrored along the Y-axis to create an image with label 39 - Keep left which is an under-represented label.
 
-![alt text][image3]
+
+<p align="center">
+<img src="./graphics/y-flipped-img.png">
+</p>
 
 The following table provides an analysis of the labels that can be augmented in this method to create additional images in either the same class or other classes.
 
@@ -103,7 +97,10 @@ The following table provides an analysis of the labels that can be augmented in 
 
 The following histogram shows a result of basic augmentation with a number of under-represented labels being passed in for augmentation. The size of the new training set is now 41458 images compared to the earlier 34799 images. It is seen that while some labels (i.e. 17, 26, 33, 34, 39) are somewhat more represented, additional augmentation is required.
 
-![alt text][image4]
+
+<p align="center">
+<img src="./graphics/prelimdatahist.png">
+</p>
 
 Consequently, minor random pertubations were applied to the training set images to further balance the dataset. This consisted of translating the images along the both the x and y axes by a random amount within a fixed range or rotating the images about their center by a random amount within a fixed range. This was accomplished by the use of the ```augment_set()``` function which was passed a number of parameters including the dataset of images and labels, the labels within the dataset to augment, the minimum threshold quantity of each label and the ranges for the translation and rotation when augmenting the dataset. This led to the introduction of the following hyper-parameters within the model and their corresponding values used for augmentation:
 
@@ -113,11 +110,16 @@ Consequently, minor random pertubations were applied to the training set images 
 
 The figure below shows a series of augmented images created from a single original image. Each image is a minor perturbation of the original image.
 
-![alt text][image5]
+
+<p align="center">
+<img src="./graphics/augmentation.png">
+</p>
 
 Once the augmentation was complete, the dataset was much more balanced and ready for further processing prior to use in training. This is shown in the histogram below:
 
-![alt text][image6]
+<p align="center">
+<img src="./graphics/finaldatahist.png">
+</p>
 
 This augmentation allows us to extend the training set from an original size of 34799 images to 68490 images which is approximately a two-fold increase.
 
@@ -136,7 +138,10 @@ Once the dataset is balanced, the images are processed before used for training.
 
 The following image shows a 17 - No Entry sign at index 35242 of the final augmented training set that has been grayscaled and equalized.
 
-![alt text][image7]
+
+<p align="center">
+<img src="./graphics/image-processing.png">
+</p>
 
 This final augmented & processed training data set is now ready to be fed into the model for training.
 
@@ -203,7 +208,9 @@ In total, each of the hyper-parameters below were adjusted until the provided li
 
 The figure below shows the accuracy loss trends for this run:
 
-![alt text][image8]
+<p align="center">
+<img src="./graphics/accuracy-loss-final.png">
+</p>
 
 These resulted in the following final values in the last epoch:
 
@@ -285,7 +292,9 @@ The model was able to correctly guess all 13 of the traffic signs, which gives a
 
 In addition, with the exception of two labels, No Vehicles & General Caution, with low precision (~88%) and recall (~87%) respectively, the remaining labels have relatively high precision and recall percentages on the test dataset which is consistent with the actual performance on these test images.
 
-![alt text][image9]
+<p align="center">
+<img src="./graphics/softmax.png">
+</p>
 
 As seen from the images above, the model is very certain of all test images with the exception of the children crossing sign. In this particular case, the model suspects there is just under a 60% probability of this sign being a children crossing sign and just over a 40% possibility of this sign being a bicycles crossing sign. This uncertainty is attributed to the pixelized nature of the downsized image which has reduced the granularity of the details for this sign.
 
@@ -293,11 +302,13 @@ As seen from the images above, the model is very certain of all test images with
 
 The two images below show visualizations of the feature maps from the first and second convolution layers in the model. The input to the model is the processed Yield sign image that was the first test image from the set downloaded from the internet.
 
-![alt text][image10]
 
-![alt text][image11]
+<p align="center">
+<img src="./graphics/conv1.png">
+</p>
+
+<p align="center">
+<img src="./graphics/conv2.png">
+</p>
 
 The feature maps of the first convolution layer seem to imply that the model is identifying and learning the various edges of the Yield sign image. However, since this visualization is grayscale it is difficult to interpret any learning of the color information that is passed to this layer since the training image input has dimensions (32,32,4). The output of the second convolution layer seems to be much more abstract and it is difficult to draw any meaningful conclusions from the visualized images.
-
-
-
